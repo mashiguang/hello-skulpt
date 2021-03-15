@@ -38,9 +38,9 @@ function runit() {
    });
    myPromise.then(function(mod) {
        console.log('success');
-   },
-       function(err) {
+   },function(err) {
        console.log(err.toString());
+       outf(err.toString())
    });
 } 
 </script> 
