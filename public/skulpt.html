@@ -21,6 +21,18 @@ function builtinRead(x) {
     return Sk.builtinFiles["files"][x];
 }
 
+function inputfun() {
+    
+    $('#div_input').show();
+    return new Promise(function(resolve, reject) {
+        $('#enter').on('click', function(e) {
+            resolve($('#input').val());
+
+            $('#div_input').hide();
+        });
+    });
+}
+
 // Here's everything you need to run a python program in skulpt
 // grab the code from your textarea
 // get a reference to your pre element for output
@@ -31,7 +43,7 @@ function runit() {
    var mypre = document.getElementById("output"); 
    mypre.innerHTML = ''; 
    Sk.pre = "output";
-   Sk.configure({output:outf, read:builtinRead, __future__: Sk.python3}); 
+   Sk.configure({output:outf, read:builtinRead, __future__: Sk.python3, inputfun}); 
    (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'mycanvas';
    var myPromise = Sk.misceval.asyncToPromise(function() {
        return Sk.importMainWithBody("<stdin>", false, prog, true);
@@ -48,16 +60,17 @@ function runit() {
 <h3>Try This</h3> 
 <form> 
 <textarea id="yourcode" cols="100" rows="30">
-import turtle
-
-t = turtle.Turtle()
-
-for c in ['red', 'green', 'yellow', 'blue']:
-    t.color(c)
-    t.forward(75)
-    t.left(90)
+name = input()
+print(name)
 </textarea><br /> 
-<button type="button" onclick="runit()">Run</button> 
+<button type="button" onclick="runit()">Run</button>
+<br>
+
+<div id="div_input" style="display: none;">
+<input id="input" type="text" placeholder="请输入内容">
+<button id="enter" type="button">enter</button>
+</div>
+
 </form> 
 <pre id="output" style="white-space: pre-wrap"></pre> 
 <!-- If you want turtle graphics include a canvas -->
