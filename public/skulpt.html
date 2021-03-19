@@ -16,9 +16,22 @@ function outf(text) {
     mypre.innerHTML = mypre.innerHTML + text; 
 } 
 function builtinRead(x) {
+    //console.log('x', x);
+    //留意上面的console，在import一个文件时，这个console.log输出了多次，为什么是多次？
+    if (x == './func1.py') {
+        console.log('func1 content', $('#func1').val());
+        return $('#func1').val();
+    }
+
     if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
             throw "File not found: '" + x + "'";
+    
     return Sk.builtinFiles["files"][x];
+}
+function read(filename) {
+    //console.log($('#func1').val());
+    //return $('#func1').val();
+    return "a = \'Hello from import\'";
 }
 
 function inputfun() {
@@ -43,7 +56,7 @@ function runit() {
    var mypre = document.getElementById("output"); 
    mypre.innerHTML = ''; 
    Sk.pre = "output";
-   Sk.configure({output:outf, read:builtinRead, __future__: Sk.python3, inputfun}); 
+   Sk.configure({output:outf, read: builtinRead, __future__: Sk.python3, inputfun}); 
    (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'mycanvas';
    var myPromise = Sk.misceval.asyncToPromise(function() {
        return Sk.importMainWithBody("<stdin>", false, prog, true);
@@ -57,12 +70,23 @@ function runit() {
 } 
 </script> 
 
-<h3>Try This</h3> 
 <form> 
+<p>
+    下面两个窗口模拟两个py文件，左边是执行入口文件，右边是func1.py，
+    func1.py里的内容可以被import，如: from func1 import my_abs
+</p>
 <textarea id="yourcode" cols="100" rows="30">
-name = input()
-print(name)
-</textarea><br /> 
+from func1 import my_abs
+print(my_abs(-100))
+</textarea>
+<textarea id="func1" cols="100" rows="30" placeholder="func1.py">
+def my_abs(x):
+    if x >= 0:
+        return x
+    else:
+        return -x
+</textarea>
+<br />
 <button type="button" onclick="runit()">Run</button>
 <br>
 
